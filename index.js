@@ -4,14 +4,8 @@ var express  = require('express');
 var app      = express();
 var port     = process.env.PORT || 5000;
 
-var mongoose    = require('mongoose');
-var database    = require('./configs/database');
-
 // Pull information from HTML POST (express4)
 var bodyParser     = require('body-parser');
-
-// Mongoose connection
-mongoose.connect(database[process.env.NODE_ENV].url);
 
 // Parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({'extended':'true'}));
@@ -23,7 +17,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
 
 // Routes
-require('./routes/api-ai.js')(app);
+// require('./routes/api-ai.js')(app);
+app.get('/', function (req, res) {
+  res.send('Welcome to the Index Route');
+});
+
+app.use('/webhook/api', require('./routes/api-ai.js'));
 
 // Listen (start app with node index.js)
 app.listen(port);
