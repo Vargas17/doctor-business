@@ -10,5 +10,11 @@ module.exports = {
     satisfacao: 'índice de satisfação',
     tempo: 'tempo médio de resposta',
     resposta: 'índice de resposta ao consumidor'
+  },
+  dbKey: {
+    resolucao: 'avaliacao_resolvida',
+    satisfacao: 'nota_consumidor',
+    tempo: 'tempo_resposta',
+    resposta: 'respondida'
   }
 }

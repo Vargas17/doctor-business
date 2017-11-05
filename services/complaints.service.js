@@ -7,6 +7,7 @@ db.bind('reclamacoes');
 
 var service = {}
 service.listAllCompanies = listAllCompanies;
+service.findCompanyComplaints = findCompanyComplaints;
 
 module.exports = service;
 
@@ -15,12 +16,19 @@ function listAllCompanies() {
   db.reclamacoes.distinct('nome_fantasia', function (err, companies){
     if (err) deferred.reject(err.name + ': ' + err.message);
 
-    companies = _.map(companies, function(company){
-      return company;
-    });
-
     deferred.resolve(companies);
   });
 
+  return deferred.promise;
+}
+
+function findCompanyComplaints(company) {
+  var deferred = Q.defer();
+  db.reclamacoes.find({nome_fantasia : { $in: company }}).toArray(function(err, complaints){
+    if (err) deferred.reject(err.name + ': ' + err.message);
+
+    deferred.resolve(complaints);
+  });
+  
   return deferred.promise;
 }
