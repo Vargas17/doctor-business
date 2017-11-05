@@ -22,6 +22,10 @@ app.get('/', function (req, res) {
   res.send('Welcome to the Index Route');
 });
 
+app.get('/terms', function(req, res){
+    res.sendfile('privacy-policy.html', { root: __dirname + "/screens/privacy-policy.html" } );
+});
+
 app.use('/webhook/api', require('./routes/api-ai.js'));
 
 // Listen (start app with node index.js)
