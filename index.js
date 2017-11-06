@@ -23,7 +23,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/terms', function(req, res){
-    res.sendfile('privacy-policy.html', { root: __dirname + "/screens/privacy-policy.html" } );
+  res.sendfile('privacy-policy.html', { root: __dirname + "/screens" } );
 });
 
 app.use('/webhook/api', require('./routes/api-ai.js'));
