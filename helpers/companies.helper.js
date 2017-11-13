@@ -29,5 +29,18 @@ module.exports = {
     sky: 'SKY',
     copel: 'Copel Telecom',
     nextel: 'Nextel'
+  },
+  dbToEntity: {
+    'Oi Fixo': 'oi',
+    'Claro Celular': 'claro',
+    'Oi Celular': 'oi',
+    'Tim': 'tim',
+    'Vivo - Telefônica (GVT)': 'vivo',
+    'SKY': 'sky',
+    'GVT (DESATIVADA)': 'vivo',
+    'Claro TV': 'claro',
+    'Claro Fixo - Embratel': 'claro',
+    'Copel Telecom': 'copel',
+    'Nextel': 'nextel'  
   }
 }

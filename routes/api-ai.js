@@ -48,6 +48,9 @@ function manageRequests(req, res){
     case 'evaluate_company_confirmation.evaluate_company_confirmation-yes.evaluate_company_confirmation-yes-evaluate':
       evaluateCompany(req, res);
       break;
+    case 'rank_companies':
+      rankCompanies(req, res);
+      break;
     default:
 
   }
@@ -92,22 +95,15 @@ function welcome(req, res){
         "displayText": "Olá, " + userData.first_name,
         "data": {
           "facebook": {
-            "text": "Olá, " + userData.first_name + "!\nComo eu posso te ajudar?",
+            "text": "Olá, " + userData.first_name + "!\n" +
+              "\nEu sou o Doctor Business e meu trabalho é avaliar empresas de telecomunicação segundo seus principais problemas, a satisfação de seus clientes, o índice de resolução dos problemas, o tempo médio de atendimento e o índice de respostas\n" +
+              "\nMeu objetivo é te auxiliar na escolha do serviço mais adequado para você!\n" +
+              "\nComo eu posso te ajudar?",
             "quick_replies": [
-              {
-                "content_type": "text",
-                "title": "Quem é você?",
-                "payload": "quem e voce"
-              },
               {
                 "content_type": "text",
                 "title": "Como funciona?",
                 "payload": "como funciona"
-              },
-              {
-                "content_type": "text",
-                "title": "Lista de empresas",
-                "payload": "lista de empresas"
               },
               {
                 "content_type": "text",
@@ -116,8 +112,18 @@ function welcome(req, res){
               },
               {
                 "content_type": "text",
+                "title": "Lista de empresas",
+                "payload": "lista de empresas"
+              },
+              {
+                "content_type": "text",
                 "title": "Avaliar empresa",
                 "payload": "avaliar empresa"
+              },
+              {
+                "content_type": "text",
+                "title": "Quem é você?",
+                "payload": "quem e voce"
               }
             ]
           }
@@ -137,7 +143,7 @@ function explainEvaluation(req, res){
       "displayText": evaluationHelper.description[evaluation],
       "data": {
         "facebook": {
-          "text": evaluationHelper.description[evaluation] + "Deseja avaliar uma empresa segundo este indicador?",
+          "text": evaluationHelper.description[evaluation] + "Você quer que eu avalie uma empresa segundo este indicador?",
           "quick_replies": [
             {
               "content_type": "text",
@@ -215,6 +221,11 @@ function evaluateCompany(req, res){
           "quick_replies": [
             {
               "content_type": "text",
+              "title": "Problemas",
+              "payload": "problemas"
+            },
+            {
+              "content_type": "text",
               "title": "Resolução",
               "payload": "resolucao"
             },
@@ -232,6 +243,11 @@ function evaluateCompany(req, res){
               "content_type": "text",
               "title": "Respostas",
               "payload": "respostas"
+            },
+            {
+              "content_type": "text",
+              "title": "Nota geral",
+              "payload": "nota geral"
             }
           ]
         }
@@ -242,11 +258,11 @@ function evaluateCompany(req, res){
   }
 
   else if(!incomplete && evaluation && company){
-    body = {
-      "speech": "Avaliando o " + evaluationHelper.name[evaluation] + " da " + companiesHelper.entityToName[company],
-      "displayText": "Avaliando o " + evaluationHelper.name[evaluation] + " da " + companiesHelper.entityToName[company]
-    };
+
     switch (evaluation) {
+      case 'problemas':
+        evaluateProblems(company, res);
+        break;
       case 'resolucao':
         evaluateResolution(company, res);
         break;
@@ -258,6 +274,9 @@ function evaluateCompany(req, res){
         break;
       case 'resposta':
         evaluateResponse(company, res);
+        break;
+      case 'geral':
+        evaluateGeneral(company, res);
         break;
       default:
 
@@ -285,7 +304,7 @@ function evaluateResolution(company, res){
       else if (resolution >= 80)
         mood = "😄";
 
-      var text = "Essa é a análise do índice de resolução de problemas da " + companiesHelper.entityToName[company] + ":\n" +
+      var text = "Essa é a análise do índice de resolução de problemas da *" + companiesHelper.entityToName[company] + "*:\n" +
         "\n- Total de reclamações: " + totalComplaints + ";\n" +
         "- Reclamações resolvidas: " + solved + ";\n" +
         "- Reclamações não resolvidas: " + notSolved + ";\n" +
@@ -345,9 +364,9 @@ function evaluateSatisfaction(company, res){
       else if (averageGrades >= 4)
         mood = "😄";
 
-      var text = "Essa é a análise do índice de satisfação dos clientes da " + companiesHelper.entityToName[company] + ":\n" +
+      var text = "Essa é a análise do índice de satisfação dos clientes da *" + companiesHelper.entityToName[company] + "*:\n" +
         "\n- Total de reclamações: " + totalComplaints + ";\n" +
-        "- Nota média: " + averageGrades + " " + mood + ";\n" +
+        "- Nota média: " + averageGrades + "/5 " + mood + ";\n" +
         "\n Composição da nota: \n" +
         "⭐ (" + grade1 + ")\n" +
         "⭐⭐ (" + grade2 + ")\n" +
@@ -390,7 +409,7 @@ function evaluateTime(company, res){
       }, 0);
       averageTime = (sumTime / (totalComplaints - notAnswered)).toFixed(1);
 
-      var text = "Essa é a análise do tempo médio de resposta da " + companiesHelper.entityToName[company] + ":\n" +
+      var text = "Essa é a análise do tempo médio de resposta da *" + companiesHelper.entityToName[company] + "*:\n" +
         "\n- Total de reclamações: " + totalComplaints + ";\n" +
         "- Tempo de resposta: " + averageTime + " dias;\n";
       var body = {
@@ -431,7 +450,7 @@ function evaluateResponse(company, res){
       else if (response >= 80)
         mood = "😄";
 
-      var text = "Essa é a análise do índice de resposta ao consumidor da " + companiesHelper.entityToName[company] + ":\n" +
+      var text = "Essa é a análise do índice de resposta ao consumidor da *" + companiesHelper.entityToName[company] + "*:\n" +
         "\n- Total de reclamações: " + totalComplaints + ";\n" +
         "- Reclamações respondidas: " + answered + ";\n" +
         "- Reclamações não respondidas: " + notAnswered + ";\n" +
@@ -452,4 +471,241 @@ function evaluateResponse(company, res){
         "displayText": "Desculpe, estou tendo problemas para acessar o banco de dados no momento :("
       }));
     });
-  }
+}
+
+function evaluateProblems(company, res){
+  var totalComplaints = 0;
+  var problems = [];
+  var mainProblems = [];
+  complaintsService.findCompanyComplaints(companiesHelper.entityToDB[company])
+    .then(function(complaints){
+      totalComplaints = complaints.length;
+      problems = complaints.map(function(complain){
+        return complain['problema'];
+      }).sort();
+
+      var clone = problems.slice();
+
+      mainProblems = problems.sort(function(a, b) { //sort in reverse order of occurrence
+    	  return (clone.lastIndexOf(b) - clone.indexOf(b) + 1) - (clone.lastIndexOf(a) - clone.indexOf(a) + 1);
+    	})
+      .filter(function(word, idx) { //remove duplicates
+        return problems.indexOf(word) === idx;
+      })
+      .slice(0, 3);  //first 3 elements
+
+      var text = "Essa é a análise dos principais problemas da *" + companiesHelper.entityToName[company] + "*:\n" +
+        "\n- Total de reclamações: " + totalComplaints + ";\n" +
+        "\nProblemas mais recorrentes:\n" +
+        "\n- " + mainProblems[0] + ";\n" +
+        "- " + mainProblems[1] + ";\n" +
+        "- " + mainProblems[2] + ";";
+      var body = {
+        "speech": text,
+        "displayText": text
+      };
+
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify(body));
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify({
+        "speech": "Desculpe, estou tendo problemas para acessar o banco de dados no momento :(",
+        "displayText": "Desculpe, estou tendo problemas para acessar o banco de dados no momento :("
+      }));
+    });
+}
+
+function evaluateGeneral(company, res){
+  var totalComplaints = 0;
+  // resolution vars
+  var solved = 0;
+  var resolution = 0;
+  // satisfaction vars
+  var sumGrades = 0;
+  var averageGrades = 0;
+  // time vars
+  var sumTime = 0;
+  var averageTime = 0;
+  var timeNotAnswered = 0;
+  // response vars
+  var answered = 0;
+  var response = 0;
+  // general vars
+  var mood;
+  var generalGrade = 0;
+
+  complaintsService.findCompanyComplaints(companiesHelper.entityToDB[company])
+    .then(function(complaints){
+      totalComplaints = complaints.length;
+      complaints.forEach(function(complain){
+        solved += (complain['avaliacao_resolvida'] === 'Resolvida' ? 1 : 0);
+
+        sumGrades += complain['nota_consumidor'];
+
+        if(complain['tempo_resposta'])
+          sumTime += complain['tempo_resposta'];
+        else
+          timeNotAnswered ++;
+
+        answered += (complain['respondida'] === 'S' ? 1 : 0);
+
+      });
+      resolution = parseInt((solved / totalComplaints)*100);
+      averageGrades = (sumGrades / totalComplaints).toFixed(1);
+      averageTime = (sumTime / (totalComplaints - timeNotAnswered)).toFixed(1);
+      response = parseInt((answered / totalComplaints)*100);
+
+      generalGrade = ( (3*(averageGrades*2) + 3*(resolution/10) + (11 - averageTime) + (response/10)) / 8 ).toFixed(1);
+
+      if (generalGrade < 5)
+        mood = "😡";
+      else if (generalGrade >= 5 && generalGrade < 7.5)
+        mood = "🙂";
+      else if (generalGrade >= 7.5)
+        mood = "😄";
+
+      var text = "Essa é a minha análise geral da *" + companiesHelper.entityToName[company] + "*:\n" +
+        "\n- Total de reclamações: " + totalComplaints + ";\n" +
+        "- Índice de resolução: " + resolution + "%;\n" +
+        "- Nota dos clientes: " + averageGrades + "/5;\n" +
+        "- Tempo de resposta: " + averageTime + " dias;\n" +
+        "- Índice de resposta: " + response + "%;\n" +
+        "\n- *Nota Geral*: " + generalGrade + "/10 " + mood;
+      var body = {
+        "speech": text,
+        "displayText": text
+      };
+
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify(body));
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify({
+        "speech": "Desculpe, estou tendo problemas para acessar o banco de dados no momento :(",
+        "displayText": "Desculpe, estou tendo problemas para acessar o banco de dados no momento :("
+      }));
+    });
+}
+
+function rankCompanies(req, res){
+  var companiesList = [];
+  var companiesTable = {};
+  var companiesEval = [];
+
+  // Getting all complaints
+  complaintsService.getAllComplaintsFiltered()
+    .then(function(complaints){
+
+      // Grouping complaints by company
+      complaints.forEach(function(complain){
+        var companyName = companiesHelper.dbToEntity[complain['nome_fantasia']];
+
+        if(companiesList.indexOf(companyName) < 0){
+          companiesList.push(companyName);
+          companiesTable[companyName] = [];
+          companiesTable[companyName].push(complain);
+        }
+        else{
+          companiesTable[companyName].push(complain);
+        }
+      });
+
+      // Evaluating each company
+      companiesList.forEach(function(company){
+        var totalComplaints = 0;
+        // resolution vars
+        var solved = 0; var resolution = 0;
+        // satisfaction vars
+        var sumGrades = 0; var averageGrades = 0;
+        // time vars
+        var sumTime = 0; var averageTime = 0; var timeNotAnswered = 0;
+        // response vars
+        var answered = 0; var response = 0;
+        // general vars
+        var mood = ""; var generalGrade = 0;
+
+        totalComplaints = companiesTable[company].length;
+
+        companiesTable[company].forEach(function(complain){
+          solved += (complain['avaliacao_resolvida'] === 'Resolvida' ? 1 : 0);
+
+          sumGrades += complain['nota_consumidor'];
+
+          if(complain['tempo_resposta'])
+            sumTime += complain['tempo_resposta'];
+          else
+            timeNotAnswered ++;
+
+          answered += (complain['respondida'] === 'S' ? 1 : 0);
+        });
+        resolution = parseInt((solved / totalComplaints)*100);
+        averageGrades = (sumGrades / totalComplaints).toFixed(1);
+        averageTime = (sumTime / (totalComplaints - timeNotAnswered)).toFixed(1);
+        response = parseInt((answered / totalComplaints)*100);
+
+        generalGrade = ( (3*(averageGrades*2) + 3*(resolution/10) + (11 - averageTime) + (response/10)) / 8 ).toFixed(1);
+
+        if (generalGrade < 5)
+          mood = "😡";
+        else if (generalGrade >= 5 && generalGrade < 7.5)
+          mood = "🙂";
+        else if (generalGrade >= 7.5)
+          mood = "😄";
+
+        companiesEval.push({
+          name: companiesHelper.entityToName[company],
+          totalComplaints: totalComplaints,
+          grade: generalGrade,
+          mood: mood
+        });
+      });
+
+      companiesEval.sort(function(a,b){
+        return (a.grade > b.grade) ? -1 : ((b.grade > a.grade) ? 1 : 0);
+      });
+
+      var text = "Este é o ranking das empresas segundo minha avaliação geral: \n";
+      var text2 = "\nEu encontrei poucas informações sobre algumas empresas (possuem menos de 100 reclamações) e por isso elas foram avaliadas separadamente: \n";
+      var needText2 = false;
+      var count = 1;
+      var count2 = 1;
+      // Structuring the text
+      companiesEval.forEach(function(company){
+        if(company.totalComplaints > 100){
+          text += count + ". *" + company.name + "*:\n" +
+                  "  - Reclamações: " + company.totalComplaints + ";\n" +
+                  "  - Nota: " + company.grade + " " + company.mood +";\n\n";
+          count ++;
+        }
+        else{
+          text2 += count2 + ". *" + company.name + "*:\n" +
+                  "  - Reclamações: " + company.totalComplaints + ";\n" +
+                  "  - Nota: " + company.grade + " " + company.mood +";\n\n";
+          count2 ++;
+          needText2 = true;
+        }
+      });
+
+      text = needText2 ? text + text2 : text;
+      var body = {
+        "speech": text,
+        "displayText": text
+      };
+
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify(body));
+    })
+    .catch(function (err) {
+      console.error(err);
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify({
+        "speech": "Desculpe, estou tendo problemas para acessar o banco de dados no momento :(",
+        "displayText": "Desculpe, estou tendo problemas para acessar o banco de dados no momento :("
+      }));
+    });
+}

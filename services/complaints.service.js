@@ -8,6 +8,7 @@ db.bind('reclamacoes');
 var service = {}
 service.listAllCompanies = listAllCompanies;
 service.findCompanyComplaints = findCompanyComplaints;
+service.getAllComplaintsFiltered = getAllComplaintsFiltered;
 
 module.exports = service;
 
@@ -29,6 +30,18 @@ function findCompanyComplaints(company) {
 
     deferred.resolve(complaints);
   });
-  
+
+  return deferred.promise;
+}
+
+function getAllComplaintsFiltered() {
+  var deferred = Q.defer();
+  db.reclamacoes.find({},{_id:0, nome_fantasia:1, avaliacao_resolvida:1, nota_consumidor:1, tempo_resposta: 1, respondida: 1})
+    .toArray(function(err, complaints){
+      if (err) deferred.reject(err.name + ': ' + err.message);
+
+      deferred.resolve(complaints);
+    });
+
   return deferred.promise;
 }
