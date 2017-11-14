@@ -96,8 +96,14 @@ function welcome(req, res){
         "data": {
           "facebook": {
             "text": "Olá, " + userData.first_name + "!\n" +
-              "\nEu sou o Doctor Business e meu trabalho é avaliar empresas de telecomunicação segundo seus principais problemas, a satisfação de seus clientes, o índice de resolução dos problemas, o tempo médio de atendimento e o índice de respostas\n" +
-              "\nMeu objetivo é te auxiliar na escolha do serviço mais adequado para você!\n" +
+              "\nEu sou o Doctor Business e meu trabalho é *avaliar a qualidade de empresas de telecomunicação*.\n" +
+              "\nUsando dados do consumidor.gov.br contendo reclamações de clientes, eu tento criar um diagnóstico dessas empresas *de acordo com os seguintes critérios:*\n" +
+              "\n- Os principais problemas da empresa;" +
+              "\n- A satisfação de seus clientes;" +
+              "\n- O índice de resolução dos problemas;" +
+              "\n- O tempo médio do atendimento;" +
+              "\n- O índice de problemas respondidos;\n" +
+              "\nMeu objetivo é te auxiliar na escolha da empresa mais preparada para te atender! ;)\n" +
               "\nComo eu posso te ajudar?",
             "quick_replies": [
               {
