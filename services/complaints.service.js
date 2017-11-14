@@ -25,11 +25,12 @@ function listAllCompanies() {
 
 function findCompanyComplaints(company) {
   var deferred = Q.defer();
-  db.reclamacoes.find({nome_fantasia : { $in: company }}).toArray(function(err, complaints){
-    if (err) deferred.reject(err.name + ': ' + err.message);
+  db.reclamacoes.find({nome_fantasia : { $in: company }}, {_id:0, nome_fantasia:1, avaliacao_resolvida:1, nota_consumidor:1, tempo_resposta: 1, respondida: 1, problema: 1})
+    .toArray(function(err, complaints){
+      if (err) deferred.reject(err.name + ': ' + err.message);
 
-    deferred.resolve(complaints);
-  });
+      deferred.resolve(complaints);
+    });
 
   return deferred.promise;
 }
