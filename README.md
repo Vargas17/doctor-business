@@ -1,1 +1,13 @@
 # doctor-business
+## Introdução
+A confiança que um cliente tem em uma empresa sempre foi um fator importante na decisão de compra de algum produto ou serviço, afinal, ao se investir dinheiro em algo, todos esperam obter um retorno que seja o mais satisfatório possível, e em uma era em que cada vez mais soluções se tornam disponíveis na web, nos deparamos com diversas ferramentas que nos auxiliam nesse objetivo.
+Para perceber a importância que essas questões têm para os consumidores atualmente, podemos observar empresas gigantes neste ramo, como Buscapé e Reclame Aqui, esta última, por exemplo, possuindo cerca de 42 milhões de acessos por mês. Além disso, cerca de 90% dos consumidores buscam referências e comparações online antes de comprar um produto.
+Tendo isso em vista, a proposta contempla o desenvolvimento de um chatbot que centralize e facilite o acesso à informações sobre as empresas, de forma que um usuário, utilizando uma plataforma da qual ele já está familiarizado (chat), consiga obter rapidamente as respostas que precisa através de perguntas simples e escritas em linguagem natural.
+Mas por que um chatbot e não um relatório com as informações das empresas, por exemplo? Para respondermos essa pergunta, primeiro vamos dar uma breve definição do que é um chatbot:
+Chatbots são programas de computador que interagem com usuários usando linguagens naturais com o propósito de simular uma conversa.
+Dito isso, assumimos que essa é uma ferramenta que pode ser usada para facilitar, simplificar e auxiliar pessoas em suas atividades. No caso específico dessa aplicação, o bot pode fornecer informação sob demanda, uma vez que, ao receber a entrada em forma de uma pergunta ou pedido do usuário, tem como saída uma resposta fornecendo o que foi requisitado, e essa característica não é atingida através de uma fonte de dados estática como um relatório, em que é necessário ler e procurar pela informação desejada. Outra importante característica é o fato dos dados serem bastante dinâmicos em um chatbot, uma vez que a base de dados usada para consulta por parte da aplicação pode ser constantemente atualizada, mas o acesso à esses dados por parte do usuário continua sendo feito da mesma forma, através da mesma plataforma e fazendo as mesmas perguntas, enquanto em um relatório seria necessária a geração de novas versões sempre que os dados fossem atualizados.
+Portanto, o principal motivo de utilizar esta forma de abordar o problema é a tentativa de tornar a experiência do usuário mais simples e agradável.
+
+## Links
+[Messenger App](https://www.messenger.com/t/doctorbusiness.bot)
+[Facebook Page](https://www.facebook.com/doctorbusiness.bot)
